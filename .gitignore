@@ -13,3 +13,10 @@
 /captures
 .externalNativeBuild
 .cxx
+build/classes/kotlin/main/BuildType$Companion.class
+build/classes/kotlin/main/BuildType$DefaultImpls.class
+build/classes/kotlin/main/GradlePluginDependency.class
+build/kotlin/compileKotlin/caches-jvm/jvm/kotlin/constants.tab.values
+build/kotlin/compileKotlin/caches-jvm/jvm/kotlin/constants.tab.values.s
+build/kotlin/sessions/
+build/pluginDescriptors/
