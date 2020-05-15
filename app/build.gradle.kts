@@ -54,6 +54,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":SharedCode"))
+
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation(LibraryDependency.KOTLIN)
     implementation(LibraryDependency.KOTLIN_SERIALIZATION_RUNTIME)

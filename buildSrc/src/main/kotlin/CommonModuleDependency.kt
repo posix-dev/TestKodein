@@ -19,7 +19,7 @@ fun DependencyHandler.addTestDependencies() {
  * syntax in module\build.gradle.kts files.
  */
 @Suppress("detekt.UnusedPrivateMember")
-private fun DependencyHandler.implementation(dependencyNotation: Any): Dependency? =
+fun DependencyHandler.implementation(dependencyNotation: Any): Dependency? =
     add("implementation", dependencyNotation)
 
 @Suppress("detekt.UnusedPrivateMember")
