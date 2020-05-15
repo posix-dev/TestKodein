@@ -1,23 +1,39 @@
 package uptop.me.testcoroutine.presentation.viewmodel
 
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.*
 import uptop.me.testcoroutine.domain.interactor.MainInteractorImpl
+import uptop.me.testcoroutine.presentation.ui.base.BaseViewModel
+import uptop.me.testcoroutine.presentation.ui.event.MainEvents
 
-class MainViewModelImpl(private val interactor: MainInteractorImpl) : ViewModel() {
+class MainViewModelImpl(private val interactor: MainInteractorImpl) :
+    BaseViewModel<MainViewModelImpl.State, Nothing, MainEvents>() {
 
-    var state: State = State(eventState = State.EventState.LoadingState)
+    override fun getInitialViewState(): State = State(isLoading = true)
 
-    fun doSome() {
-        state = state.copy(eventState = State.EventState.ErrorState(
-            error = NullPointerException()
-        ))
+    override fun handleEvent(uiEvent: MainEvents) = when (uiEvent) {
+        MainEvents.Initial -> doSome()
     }
 
-    data class State(val eventState: EventState) {
-        sealed class EventState {
-            object LoadingState : EventState()
-            data class DataState(val data: String)
-            data class ErrorState(val error: Throwable) : EventState()
+    private fun doSome() {
+        var result = ""
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                result = interactor.doIt()[0]
+            }
+            withContext(Dispatchers.Main) {
+                viewState = viewState.copy(isLoading = false, data = result)
+            }
         }
     }
+
+    data class State(
+        val isLoading: Boolean = false,
+        val data: String = ""
+    )
+
+//    sealed class EventState {
+//        data class Success(val data: String): EventState()
+//        data class Error(val error: Throwable) : EventState()
+//    }
 }

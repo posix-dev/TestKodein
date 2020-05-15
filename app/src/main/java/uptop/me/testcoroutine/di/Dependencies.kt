@@ -1,48 +1,55 @@
 package uptop.me.testcoroutine.di
 
 import android.content.Context
+import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.engine.okhttp.OkHttp
+import okhttp3.logging.HttpLoggingInterceptor
 import org.kodein.di.Kodein
 import org.kodein.di.generic.*
 import uptop.me.testcoroutine.*
 import uptop.me.testcoroutine.data.MFPNetworkImpl
 import uptop.me.testcoroutine.data.MFPNetworkStubImpl
 import uptop.me.testcoroutine.data.Network
+import uptop.me.testcoroutine.data.repository.SomeRepositoryImpl
 import uptop.me.testcoroutine.domain.interactor.MainInteractorImpl
+import uptop.me.testcoroutine.domain.repository.SomeRepository
 import uptop.me.testcoroutine.presentation.viewmodel.MainViewModelImpl
 
 fun appModule(context: Context) = Kodein.Module("appModule") {
     bind<Context>() with provider { context }
-    constant(tag = "stubNumber") with 8
-    constant(tag = "productionNumber") with 1
     import(dataModule())
+    import(domainModule())
 }
 
-
-
-fun activityModule() = Kodein.Module("activityModule") {
-    bind<MainInteractorImpl>() with provider { MainInteractorImpl() }
-    bind() from singleton {
-        KodeinViewModelFactory(
-            kodein
-        )
-    }
+fun presentationModule() = Kodein.Module("activityModule") {
+    bind() from singleton { KodeinViewModelFactory(kodein) }
     bind() from singleton { MainViewModelImpl(instance()) }
 }
 
 fun dataModule() = Kodein.Module("dataModule") {
-    bind<Network>() with singleton {
-        getNetworkInjectManager(instance(tag = "stubNumber"))
+    bind<HttpClientEngine>() with singleton {
+        OkHttp.create {
+            val networkInterceptor = HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            }
+            addNetworkInterceptor(networkInterceptor)
+        }
     }
-    bind<SomeRepositoryImpl>() with singleton { SomeRepositoryImpl(instance()) }
+    bind<Network>() with singleton {
+        getNetworkInjectManager(instance())
+    }
+    bind<SomeRepository>() with singleton {
+        SomeRepositoryImpl(instance())
+    }
 }
 
 fun domainModule() = Kodein.Module("domainModule") {
-
+    bind<MainInteractorImpl>() with singleton { MainInteractorImpl(instance()) }
 }
 
-fun getNetworkInjectManager(number: Int): Network =
-    if (BuildConfig.DEBUG) {
-        MFPNetworkStubImpl(number)
+fun getNetworkInjectManager(clientEngine: HttpClientEngine): Network =
+    if (!BuildConfig.DEBUG) {
+        MFPNetworkStubImpl()
     } else {
-        MFPNetworkImpl(number)
+        MFPNetworkImpl(clientEngine)
     }

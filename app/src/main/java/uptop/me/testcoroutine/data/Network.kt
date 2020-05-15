@@ -1,21 +1,20 @@
 package uptop.me.testcoroutine.data
 
+import io.ktor.client.engine.HttpClientEngine
 import uptop.me.testcoroutine.data.network.SomeApi
-import uptop.me.testcoroutine.SomeApiImpl
-import uptop.me.testcoroutine.SomeApiStub
+import uptop.me.testcoroutine.data.network.SomeApiImpl
+import uptop.me.testcoroutine.data.network.SomeApiStub
 
 interface Network {
     val someApi: SomeApi
 }
 
 class MFPNetworkImpl constructor(
-    val interceptors: Int
+    private val clientEngine: HttpClientEngine
 ) : Network {
-    override val someApi: SomeApi by lazy { SomeApiImpl() }
+    override val someApi: SomeApi by lazy { SomeApiImpl(clientEngine) }
 }
 
-class MFPNetworkStubImpl constructor(
-    val interceptors: Int
-) : Network {
+class MFPNetworkStubImpl: Network {
     override val someApi: SomeApi by lazy { SomeApiStub() }
 }

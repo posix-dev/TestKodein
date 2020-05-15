@@ -2,39 +2,49 @@ package uptop.me.testcoroutine.presentation.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.closestKodein
-import org.kodein.di.android.subKodein
-import org.kodein.di.generic.instance
+import org.kodein.di.android.retainedKodein
 import org.kodein.di.generic.kcontext
 import uptop.me.testcoroutine.R
-import uptop.me.testcoroutine.SomeRepositoryImpl
-import uptop.me.testcoroutine.di.activityModule
-import uptop.me.testcoroutine.presentation.viewmodel.MainViewModelImpl
+import uptop.me.testcoroutine.di.presentationModule
+
 
 class MainActivity : AppCompatActivity(), KodeinAware {
 
-    private val _parentKodein = closestKodein()
     override val kodeinContext = kcontext<AppCompatActivity>(this)
-    override val kodein by subKodein(_parentKodein) {
-        import(activityModule())
-    }
-
-    private val repositoryImpl by instance<SomeRepositoryImpl>()
-    private val viewModeFactory by instance<ViewModelProvider.Factory>()
-    private val viewModel: MainViewModelImpl by lazy {
-        ViewModelProvider(this, viewModeFactory).get(MainViewModelImpl::class.java)
+    private val _parentKodein by closestKodein()
+    override val kodein by retainedKodein {
+        extend(_parentKodein)
+        import(presentationModule())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         kodein.kodeinTrigger?.trigger()
-        repositoryImpl.getData().forEach {
-            print("hey $it")
-        }
-        print("hey ${repositoryImpl.getData()}")
+
+        val newFragment: Fragment = MainFragment()
+        val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
+
+// Replace whatever is in the fragment_container view with this fragment,
+// and add the transaction to the back stack if needed
+
+// Replace whatever is in the fragment_container view with this fragment,
+// and add the transaction to the back stack if needed
+        transaction.replace(R.id.mainFrame, newFragment)
+        transaction.addToBackStack(null)
+
+// Commit the transaction
+
+// Commit the transaction
+        transaction.commit()
+//        viewModel.handleEvent()
+//        viewModel.doSome { text ->
+//            activityMainHello.text = text
+//        }
     }
 
 }

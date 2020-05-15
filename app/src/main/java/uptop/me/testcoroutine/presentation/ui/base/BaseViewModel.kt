@@ -4,21 +4,18 @@ import androidx.annotation.CallSuper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import uptop.me.testcoroutine.presentation.viewmodel.news.NewsEvent
+import uptop.me.testcoroutine.presentation.viewmodel.news.News
 
-abstract class BaseViewModel<ViewState, Event> : ViewModel() {
-    private val onNextStub: (Any) -> Unit = { Unit }
-    private val onCompleteStub: () -> Unit = { Unit }
-
+abstract class BaseViewModel<ViewState, News, UiEvent> : ViewModel() {
     private val viewStateLiveData = MutableLiveData<ViewState>()
-//    private val eventsLiveData = SingleLiveEvent<Event>()
+    private val newsLiveData = NewsEvent<News>()
 
     protected var viewState: ViewState
         get() = viewStateLiveData.value!!
         set(value) {
             viewStateLiveData.value = value
         }
-
-//    protected val disposables = CompositeDisposable()
 
     @CallSuper
     open fun initialize() {
@@ -27,18 +24,15 @@ abstract class BaseViewModel<ViewState, Event> : ViewModel() {
         }
     }
 
-    protected abstract fun getInitialViewState(): ViewState
+    //send single event
+    protected fun sendNews(news: News) = newsLiveData.postValue(News(news))
 
-    protected fun sendEvent(event: Event) {
-//        eventsLiveData.postValue(LiveEvent(event))
-    }
+    protected abstract fun getInitialViewState(): ViewState
 
     fun getViewStateObservable(): LiveData<ViewState> = viewStateLiveData
 
-//    fun getEventsObservable(): SingleLiveEvent<Event> = eventsLiveData
+    fun getEventsObservable(): NewsEvent<News> = newsLiveData
 
-    override fun onCleared() {
-        super.onCleared()
-//        disposables.clear()
-    }
+    abstract fun handleEvent(uiEvent: UiEvent)
+
 }

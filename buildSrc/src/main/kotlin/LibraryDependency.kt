@@ -2,6 +2,8 @@
 
 private object LibraryVersion {
     const val KODEIN = "6.5.5"
+    const val KOTLIN_SERIALIZATION = "0.20.0"
+    const val OKHTTP_LOGGING_INTERCEPTOR = "4.6.0"
     const val KTOR = "1.3.2"
     const val RETROFIT = "2.7.1"
     const val OK_HTTP = "4.3.1"
@@ -27,13 +29,19 @@ private object LibraryVersion {
 
 object LibraryDependency {
     const val KOTLIN = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${CoreVersion.KOTLIN}"
+    const val KOTLIN_SERIALIZATION_RUNTIME =
+        "org.jetbrains.kotlinx:kotlinx-serialization-runtime:${LibraryVersion.KOTLIN_SERIALIZATION}"
 
     // Required by Android dynamic feature modules and SafeArgs
 //    const val KOTLIN_REFLECT = "org.jetbrains.kotlin:kotlin-reflect:${CoreVersion.KOTLIN}"
     const val KODEIN = "org.kodein.di:kodein-di-generic-jvm:${LibraryVersion.KODEIN}"
     const val KODEIN_ANDROID_X = "org.kodein.di:kodein-di-framework-android-x:${LibraryVersion.KODEIN}"
     const val KTOR_CORE = "io.ktor:ktor-client-core:${LibraryVersion.KTOR}"
+    const val KTOR_JSON = "io.ktor:ktor-client-json-jvm:${LibraryVersion.KTOR}"
+    const val KTOR_SERIALIZATION = "io.ktor:ktor-client-serialization-jvm:${LibraryVersion.KTOR}"
     const val KTOR_ANDROID = "io.ktor:ktor-client-android:${LibraryVersion.KTOR}"
+    const val KTOR_OKHTTP = "io.ktor:ktor-client-okhttp:${LibraryVersion.KTOR}"
+    const val OKHTTP_LOGGING_INTERCEPTOR = "com.squareup.okhttp3:logging-interceptor:${LibraryVersion.OKHTTP_LOGGING_INTERCEPTOR}"
 //    const val RETROFIT = "com.squareup.retrofit2:retrofit:${LibraryVersion.RETROFIT}"
 //    const val RETROFIT_MOSHI_CONVERTER = "com.squareup.retrofit2:converter-moshi:${LibraryVersion.RETROFIT}"
 
@@ -57,8 +65,6 @@ object LibraryDependency {
     const val LIFECYCLE_EXTENSIONS = "android.arch.lifecycle:extensions:${LibraryVersion.LIFECYCLE}"
     const val LIFECYCLE_VIEW_MODEL_KTX =
         "androidx.lifecycle:lifecycle-viewmodel-ktx:${LibraryVersion.LIFECYCLE_VIEW_MODEL_KTX}"
-    const val NAVIGATION_FRAGMENT_KTX = "androidx.navigation:navigation-fragment-ktx:${CoreVersion.NAVIGATION}"
-    const val NAVIGATION_UI_KTX = "androidx.navigation:navigation-ui-ktx:${CoreVersion.NAVIGATION}"
     const val COIL = "io.coil-kt:coil:${LibraryVersion.COIL}"
     const val K_ANDROID = "com.pawegio.kandroid:kandroid:${LibraryVersion.K_ANDROID}"
     const val LOTTIE = "com.airbnb.android:lottie:${LibraryVersion.LOTTIE}"
